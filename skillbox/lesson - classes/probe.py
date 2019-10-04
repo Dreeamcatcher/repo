@@ -22,7 +22,7 @@ class Fraction:
         self.denominator = denominator
 
     def __add__(self, other, action='add'):
-        """Сложение дробей"""
+        """Сложение/вычитание дробей"""
         new_fraction = Fraction()
         if type(other) is int:
             new_fraction.numerator = self.numerator + other * self.denominator
