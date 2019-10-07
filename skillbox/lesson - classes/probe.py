@@ -32,7 +32,6 @@ class Fraction:
         elif type(other) is Fraction:
             # приводим знаменатели к общему
             common_denominator = self.get_common_denominator(other)
-
             new_fraction.numerator = self.numerator * (common_denominator / self.denominator)
             new_fraction.numerator += other.numerator * (common_denominator / other.denominator)
             if action == 'sub':
@@ -43,6 +42,33 @@ class Fraction:
     def __sub__(self, other):
         """Вычитание дробей"""
         return self.__add__(other, action='sub')
+
+    def __mul__(self, other, action='mul'):
+        """Умножение/деление дробей"""
+        new_fraction = Fraction()
+        if type(other) == int:
+            new_fraction.numerator, new_fraction.denominator = other, 1
+        elif type(other) is Fraction:
+            new_fraction.numerator, new_fraction.denominator = other.numerator, other.denominator
+
+        if action == 'truediv':
+            new_fraction.numerator, new_fraction.denominator = new_fraction.denominator, new_fraction.numerator
+
+        new_fraction.numerator *= self.numerator
+        new_fraction.denominator *= self.denominator
+        return new_fraction.reduction()
+
+    def __truediv__(self, other):
+        """Деление дробей"""
+        return self.__mul__(other, action='truediv')
+
+    def __int__(self):
+        """Приведение дроби к целому числу"""
+        return self.numerator // self.denominator
+
+    def __float__(self):
+        """Приведение дроби к числу с плавающей точкой"""
+        return self.numerator / self.denominator
 
     def __str__(self):
         """Форматированный вывод"""
@@ -63,7 +89,7 @@ class Fraction:
         """Сокращение дроби"""
 
         def get_common_multiplier(num_1, num_2):
-            """Наибольший общий делитель двух чисел)"""
+            """Получить наибольший общий делитель двух чисел)"""
             num_1, num_2 = abs(num_1), abs(num_2)
             while num_1 != 0 and num_2 != 0:
                 if num_1 > num_2:
@@ -79,9 +105,26 @@ class Fraction:
         return self
 
 
-a = Fraction(1, 2)
-b = Fraction(1, 2)
-с = 5
-print(a)
-print(b)
-print(a - 5)
+class OperationsOnFraction(Fraction):
+
+    def getint(self):
+        """Приведение дроби к целому числу"""
+        return super().__int__()
+
+    def getfloat(self):
+        """Приведение дроби к числу с плавающей точкой"""
+        return super().__float__()
+
+
+a = Fraction(1, 4)
+b = Fraction(3, 7)
+c = 3
+print('a =', a, '; b =', b, '; c =', c)
+print('a + b = ', a + b)
+print('a - b = ', a - b)
+print('a * b = ', a * b)
+print('a / b = ', a / b)
+print('int(a) = ', int(a))
+print('float(a) = ', float(a))
+print('getint = ', OperationsOnFraction(1, 4).getint())
+print('getfloat = ', OperationsOnFraction(1, 4).getfloat())
